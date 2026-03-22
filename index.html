@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Joshua 🥃</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --primary-dark: #1a1a1b; --accent-bronze: #cd7f32; --text-light: #e0e0e0; --letter-bg: #2d2d2e; }
+        body { background-color: var(--primary-dark); text-align: center; font-family: 'Quicksand', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; overflow-x: hidden; color: var(--text-light); }
+        .floating-icon { position: fixed; color: rgba(205, 127, 50, 0.2); font-size: 22px; animation: float 4s linear infinite; z-index: -1; bottom: -50px; }
+        @keyframes float { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+        h1 { font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-bronze); font-size: 2.2rem; margin: 15px 0; }
+        .cake-container { position: relative; width: 200px; height: 150px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; margin-bottom: 25px; }
+        .layer-bottom { width: 180px; height: 50px; background: #333; border-radius: 4px; border-bottom: 5px solid #000; z-index: 1; }
+        .layer-top { width: 140px; height: 40px; background: #444; border-radius: 4px; border-bottom: 5px solid #000; margin-bottom: -5px; z-index: 2; }
+        .candle { width: 12px; height: 40px; background: #cd7f32; border-radius: 2px; z-index: 3; }
+        .flame { width: 16px; height: 24px; background: radial-gradient(circle at bottom, #fff, #ff8800, #ff4400); border-radius: 50% 50% 20% 20%; margin-bottom: 5px; animation: flicker 0.1s infinite alternate; filter: blur(1px); box-shadow: 0 0 15px rgba(255, 165, 0, 0.6); z-index: 4; }
+        #letter-wrapper { display: none; max-width: 500px; width: 90%; background: var(--letter-bg); padding: 25px; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: left; line-height: 1.6; animation: slideUp 0.8s ease-out; margin-top: 15px; border-left: 5px solid var(--accent-bronze); color: #fff; }
+        .letter-text p { margin-bottom: 15px; font-size: 1.1rem; opacity: 0.9; }
+        .letter-header { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--accent-bronze); font-size: 1.4rem; display: block; margin-bottom: 15px; }
+        .letter-footer { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--accent-bronze); font-size: 1.2rem; display: block; margin-top: 10px; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .btn { padding: 18px 36px; font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size: 1rem; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; background: var(--accent-bronze); color: #000; box-shadow: 0 6px 20px rgba(0,0,0,0.4); z-index: 10; }
+        @keyframes flicker { from { transform: scale(1); } to { transform: scale(1.1); } }
+    </style>
+</head>
+<body>
+    <h1>Happy Birthday Joshua</h1>
+    <div class="cake-container">
+        <div id="flame" class="flame"></div>
+        <div class="candle"></div>
+        <div class="layer-top"></div>
+        <div class="layer-bottom"></div>
+    </div>
+    <button id="mainBtn" class="btn" onclick="startMic()">Open Message</button>
+    <div id="letter-wrapper">
+        <span class="letter-header">Dear Joshua,</span>
+        <div class="letter-text">
+            <p>Happy Birthday! I wanted to reach out and wish you a very happy birthday as you celebrate another milestone.</p>
+            <p>I still clearly remember how you managed to snag that Salutatorian spot back in high school you always had the brains to back up the hard work, and I’ve always respected that level of focus and ambition you've always carried with you.</p>
+            <p>I know the relationship side of things has been a bit of a rollercoaster for you lately, with things not quite clicking the way you'd hoped. But honestly, man, don’t sweat it at all. With everything you’ve got going for you, the right person will definitely show up when the time is right. In the meantime, just enjoy the peace and the freedom while you have it.</p>
+            <p>I’m looking forward to catching up properly and hearing what’s actually new in your world. Let’s grab a drink or hang out soon to celebrate properly. Cheers to a great year ahead!</p>
+        </div>
+        <span class="letter-footer">Cheers,<br>Denver</span>
+    </div>
+
+    <script>
+        let audioCtx; let isSuccess = false;
+        function playBdaySong() {
+            const melody = [392, 392, 440, 392, 523, 493, 392, 392, 440, 392, 587, 523];
+            const timing = [0.4, 0.2, 0.6, 0.6, 0.6, 1.2, 0.4, 0.2, 0.6, 0.6, 0.6, 1.2];
+            let time = audioCtx.currentTime;
+            melody.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'square'; osc.frequency.setValueAtTime(freq, time);
+                gain.gain.setValueAtTime(0, time);
+                gain.gain.linearRampToValueAtTime(0.05, time + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.0001, time + timing[i]);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(time); osc.stop(time + timing[i]);
+                time += timing[i];
+            });
+            setTimeout(playBdaySong, 8000); 
+        }
+        async function startMic() {
+            const btn = document.getElementById('mainBtn');
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+            playBdaySong();
+            btn.innerText = "Now Blow on the Mic! 🌬️";
+            btn.disabled = true;
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const source = audioCtx.createMediaStreamSource(stream);
+                const analyser = audioCtx.createAnalyser();
+                source.connect(analyser);
+                const data = new Uint8Array(analyser.frequencyBinCount);
+                const check = () => {
+                    if (isSuccess) return;
+                    analyser.getByteFrequencyData(data);
+                    let vol = data.reduce((a, b) => a + b) / data.length;
+                    if (vol > 45) triggerSuccess(); else requestAnimationFrame(check);
+                };
+                check();
+            } catch (e) { 
+                btn.innerText = "Mic Error - Tap to View"; 
+                btn.disabled = false;
+                btn.onclick = triggerSuccess;
+            }
+        }
+        function triggerSuccess() {
+            if(isSuccess) return;
+            isSuccess = true;
+            document.getElementById('flame').style.display = 'none';
+            document.getElementById('mainBtn').style.display = 'none';
+            document.getElementById('letter-wrapper').style.display = 'block';
+            confetti({ particleCount: 150, spread: 60, origin: { y: 0.6 }, colors: ['#cd7f32', '#444', '#ffffff'] });
+        }
+        setInterval(() => {
+            const h = document.createElement('div'); h.className = 'floating-icon'; h.innerHTML = Math.random() > 0.5 ? '🥃' : '🔥';
+            h.style.left = Math.random() * 100 + 'vw';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 4000);
+        }, 800);
+    </script>
+</body>
+</html>
